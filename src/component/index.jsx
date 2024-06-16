@@ -33,14 +33,14 @@ export default function ScrollBar({url}){
         const amountScrolled = document.body.scrollTop || document.documentElement.scrollTop;
         const height = document.documentElement.scrollTop - document.documentElement.clientHeight;
 
-        setScrollPercent((amountScrolled/height)*100);
+        setScrollPercent((amountScrolled / height) * 100);
     };
 
     useEffect(()=>{
         window.addEventListener("scroll", handleScrollPercentage)
         return ()=> {
-            window.removeEventListener("scroll", ()=> {})
-        };
+            window.removeEventListener("scroll", () => {})
+};
     },[]);
 
     if(errorMessage){
