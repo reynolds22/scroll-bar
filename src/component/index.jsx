@@ -1,10 +1,11 @@
 import React, {useState, useEffect} from "react";
+import "./scroll.css";
 
 export default function ScrollBar({url}){
 
     const[data, setData] = useState([]);
     const[loading, setLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState();
+    const [errorMessage, setErrorMessage] = useState("");
     const [scrollPercent, setScrollPercent] = useState(0);
 
     async function fetchData(getUrl){
@@ -28,11 +29,39 @@ export default function ScrollBar({url}){
         fetchData(url);
     },[url]);
 
-    console.log(data, loading);
+    function handleScrollPercentage(){
+        const amountScrolled = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollTop - document.documentElement.clientHeight;
+
+        setScrollPercent((amountScrolled/height)*100);
+    };
+
+    useEffect(()=>{
+        window.addEventListener("scroll", handleScrollPercentage)
+        return ()=> {
+            window.removeEventListener("scroll", ()=> {})
+        };
+    },[]);
+
+    if(errorMessage){
+        return <div>Error ! {errorMessage}</div>
+    };
+
+    if(loading){
+        return <div>Loading data !</div>
+    };
 
     return (
-        <div className="scroll-bar">
-            <h1>Scroll Bar!</h1>
+        <div>
+            <div className="top-container">
+                <h1>Scroll Bar!</h1>
+                <div className="tracking-container">
+                    <div 
+                        className="current-progress" 
+                        style={{width : `${scrollPercent}%`}}
+                    ></div>
+                </div>
+            </div>
             <div className="data-container">
                 {
                     data && data.length > 0
@@ -43,4 +72,3 @@ export default function ScrollBar({url}){
         </div>
     );
 };
-//2.33
